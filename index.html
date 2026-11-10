@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#090d14"><link rel="icon" href="data:,"><title>Soriax: Archmage's Trial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="game"><canvas id="view"></canvas><div class="vignette"></div><div class="grain"></div>
+<div id="hud" class="hidden">
+  <header class="topbar"><div class="brand"><span class="brand-mark">✦</span><div><b>SORIAX</b><small>THE IMMORTAL ARCHMAGE</small></div></div><div class="encounter"><span class="eyebrow">ENCOUNTER</span><strong id="waveLabel">I — THE OUTER SANCTUM</strong></div><div class="top-right"><span class="seal">✧</span><span id="objective">DEFEAT ALL FOES</span><button id="pauseBtn" aria-label="Pause">Ⅱ</button></div></header>
+  <div class="wave-progress"><span id="waveFill"></span></div>
+  <section class="target-panel hidden" id="targetPanel"><span class="target-kicker">✦ &nbsp;LOCKED TARGET</span><div class="target-title"><b id="targetName">—</b><span id="targetDistance">— m</span></div><div class="health-track"><i id="targetHealth"></i></div></section>
+  <div class="bossbar hidden" id="bossbar"><div><span>✦ &nbsp;ANCIENT COLOSSUS</span><b id="bossPct">100%</b></div><div class="boss-track"><i id="bossHealth"></i></div></div>
+  <div class="reticle"><i></i><i></i><i></i><i></i><b></b></div><div id="targetBox" class="target-box hidden"><span></span><span></span><span></span><span></span></div><div class="hitmarker hidden" id="hitmarker">✣</div>
+  <div class="spell-toast hidden" id="spellToast"></div>
+  <div class="bottom-ui"><div class="vitals"><div class="vital-head"><span>VITALITY</span><b id="hpText">100 / 100</b></div><div class="vital-track"><i id="hpFill"></i></div><div class="vital-head mana-head"><span>ARCANE RESERVE</span><b id="manaText">100 / 100</b></div><div class="vital-track mana-track"><i id="manaFill"></i></div><div class="status-row"><span class="status-dot"></span><span id="statusText">WARDING ACTIVE</span></div></div>
+    <div class="spellbook"><div class="spell-label">EQUIPPED SPELL <span>Q / E TO CYCLE</span></div><div class="spell-current"><div class="spell-icon" id="spellIcon">✧</div><div class="spell-meta"><b id="spellName">ARCANE BOLT</b><small id="spellSub">QUICK · PRECISE</small></div><div class="spell-key">LMB</div></div><div class="spell-slots" id="spellSlots"></div></div>
+    <div class="combat-stats"><div><span>ELIMINATED</span><b id="killCount">00</b></div><div><span>THREAT LEVEL</span><b id="threatLevel">I</b></div><div class="target-help"><kbd>TAB</kbd> LOCK TARGET</div></div></div>
+  <div class="hands"><div class="arm left-arm"><div class="cuff"></div><div class="hand"></div></div><div class="arm right-arm"><div class="cuff"></div><div class="hand"></div><div class="orb"></div></div></div>
+  <div id="damageFlash"></div><div id="toast" class="toast"></div>
+</div>
+<section id="titleScreen" class="screen">
+  <div class="title-backdrop"></div><div class="title-content"><div class="sigil">✦</div><p class="overline">A FIRST-PERSON FANTASY COMBAT EXPERIENCE</p><h1>SORIAX</h1><h2>ARCHMAGE’S TRIAL</h2><div class="ornament"><span></span> ✧ <span></span></div><p class="intro">The sanctum stirs. The old wards are breaking.<br>Let them learn what it means to challenge an immortal.</p><button class="primary-btn" id="beginBtn"><span>ENTER THE SANCTUM</span><b>→</b></button><div class="title-footer"><span>WASD MOVE <i>·</i> MOUSE AIM <i>·</i> LMB CAST</span><span>AN ARCHMAGE’S GAUNTLET</span></div></div><div class="title-art"><div class="art-halo"></div><div class="kobold-portrait"><div class="portrait-cloak"></div><div class="portrait-neck"></div><div class="portrait-head"><i class="horn horn-left"></i><i class="horn horn-right"></i><i class="ear ear-left"></i><i class="ear ear-right"></i><i class="hair"></i><i class="eye eye-left"></i><i class="eye eye-right"></i><i class="snout"></i></div></div><div class="art-rune r1">✧</div><div class="art-rune r2">ᛟ</div><div class="art-staff">⌁</div><div class="art-caption">SORIAx <span>·</span> KOBOLD ARCHMAGE</div></div>
+</section>
+<section id="loadout" class="screen hidden"><div class="loadout-card"><div class="loadout-head"><div><p class="overline">PREPARE FOR THE TRIAL</p><h2>Choose your <em>arsenal</em></h2></div><button id="closeLoadout" class="close-btn">×</button></div><p class="loadout-copy">Select up to four spells for this encounter. Every incantation draws from your arcane reserve.</p><div class="loadout-grid" id="loadoutGrid"></div><div class="loadout-bottom"><span id="selectedCount">0 / 4 SELECTED</span><button id="deployBtn" class="primary-btn"><span>BEGIN ENCOUNTER</span><b>→</b></button></div></div></section>
+<section id="pauseScreen" class="screen hidden"><div class="pause-card"><p class="overline">THE SANCTUM WAITS</p><h2>Trial <em>paused</em></h2><button class="primary-btn" id="resumeBtn"><span>RETURN TO COMBAT</span><b>→</b></button><button id="loadoutBtn" class="text-btn">CHANGE LOADOUT</button><p class="pause-hint">WASD move <i>·</i> Space jump <i>·</i> Shift sprint <i>·</i> Ctrl crouch<br>LMB cast <i>·</i> RMB focus <i>·</i> F arcane burst <i>·</i> R restore</p></div></section>
+<section id="victoryScreen" class="screen hidden"><div class="pause-card"><p class="overline">THE WARDS HOLD</p><h2>Trial <em>complete</em></h2><p class="loadout-copy">The sanctum is quiet. For now.</p><button class="primary-btn" id="againBtn"><span>FIGHT AGAIN</span><b>→</b></button></div></section>
+<div id="waveAnnounce" class="wave-announce hidden"><span>ENCOUNTER</span><b>WAVE I</b><i>THE OUTER SANCTUM</i></div><div id="crosshairHint" class="crosshair-hint hidden">CLICK TO RESUME</div>
+</main><script type="module" src="game.js"></script>
+</body></html>
